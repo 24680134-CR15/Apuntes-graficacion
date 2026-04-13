@@ -192,6 +192,168 @@ Por otra parte, el estudio de la representación y el trazado de líneas y polí
 
 Finalmente, el análisis de las áreas de aplicación demostró que la graficación por computadora tiene un impacto significativo en diversos campos, tales como la medicina, el entretenimiento, la ingeniería y la realidad virtual, donde se utiliza para la visualización, simulación y análisis de información compleja. En conjunto, los contenidos de esta unidad proporcionan una base sólida para el estudio posterior de técnicas más avanzadas, al establecer los principios históricos, matemáticos y tecnológicos que hacen posible la generación y manipulación de gráficos digitales en la actualidad.
 
+# Introducción a la Unidad: Graficación 2D
+
+La graficación en dos dimensiones (2D) es una rama fundamental dentro del área de la computación gráfica, enfocada en la representación visual de objetos sobre un plano cartesiano. En esta unidad se profundiza en los principios, técnicas y herramientas necesarias para crear, manipular y visualizar figuras bidimensionales mediante el uso de algoritmos y estructuras matemáticas.
+
+A lo largo de esta unidad, se explorarán conceptos como sistemas de coordenadas, transformación de objetos (traslación, rotación y escalado), así como el uso de primitivas gráficas básicas como puntos, líneas y polígonos. Además, se analizarán distintos métodos para la generación de gráficos eficientes, considerando aspectos como la precisión y el rendimiento.
+
+El estudio de la graficación 2D no solo es esencial para el desarrollo de interfaces gráficas y videojuegos, sino también para aplicaciones en áreas como la simulación, el diseño asistido por computadora (CAD) y la visualización de datos.
+
+Esta unidad tiene como objetivo proporcionar al estudiante las bases teóricas y prácticas necesarias para comprender y desarrollar aplicaciones gráficas en dos dimensiones, fomentando el pensamiento lógico y la capacidad de resolver problemas mediante representaciones visuales.
+
+# Unidad 2: Graficación 2D 
+
+## 2.1 Transformación Bidimensional
+
+Las transformaciones bidimensionales son operaciones que permiten modificar objetos dentro de un plano, cambiando su posición, tamaño, orientación o forma. Estas transformaciones son fundamentales en la computación gráfica, ya que hacen posible la manipulación de figuras sin necesidad de redefinirlas completamente.
+
+Se utilizan ampliamente en aplicaciones como videojuegos, interfaces gráficas, animaciones y simulaciones.
+
+### 2.1.1 Traslación
+
+La traslación es una transformación que consiste en mover un objeto de un lugar a otro dentro del plano. Este desplazamiento se realiza sin alterar la forma, tamaño ni orientación del objeto. Es una de las operaciones más básicas y se utiliza comúnmente para animaciones y control de movimiento.
+
+---
+
+### 2.1.2 Escalamiento
+
+El escalamiento permite cambiar el tamaño de un objeto. Puede hacerse de manera uniforme (manteniendo las proporciones) o no uniforme (modificando las dimensiones de forma independiente). Esta transformación es útil para acercar, alejar o ajustar objetos dentro de una escena gráfica.
+
+---
+
+### 2.1.3 Rotación
+
+La rotación consiste en girar un objeto alrededor de un punto determinado, generalmente el origen o su propio centro. Esta transformación es esencial para simular movimientos circulares, orientar objetos en diferentes direcciones y generar efectos dinámicos en animaciones.
+
+---
+
+### 2.1.4 Sesgado
+
+El sesgado (o deformación) modifica la forma de un objeto inclinándolo en una dirección específica. A diferencia de otras transformaciones, esta altera la geometría del objeto, produciendo efectos visuales como inclinaciones o distorsiones.
+
+---
+
+## 2.2 Representación Matricial de las Transformaciones Bidimensionales
+
+En la graficación 2D, las transformaciones pueden representarse mediante matrices, lo que permite aplicar múltiples cambios de forma eficiente. Este enfoque facilita la combinación de varias transformaciones en una sola operación, optimizando el rendimiento de los sistemas gráficos.
+
+El uso de matrices es especialmente importante en motores gráficos y bibliotecas de programación, ya que permite realizar cálculos de manera estructurada y organizada.
+
+### Ejercicio: Control con teclas de dirección
+
+Un ejercicio común consiste en controlar el movimiento de un objeto en pantalla utilizando las teclas de dirección del teclado. Cada tecla corresponde a un desplazamiento en una dirección específica, lo que permite aplicar la transformación de traslación en tiempo real. Este tipo de práctica ayuda a comprender cómo interactúan las transformaciones con la entrada del usuario.
+https://github.com/user-attachments/assets/01f28ab2-87bb-4126-b31a-0700104cc016
+
+```
+import bpy
+import mathutils
+
+def mover(nombre_obj, dx, dz):
+    obj = bpy.data.objects.get(nombre_obj)
+    if obj:
+        mat = mathutils.Matrix.Translation((dx, 0, dz))
+        obj.matrix_world = obj.matrix_world @ mat
+
+
+class MoverFlechas(bpy.types.Operator):
+    bl_idname = "view3d.mover_flechas"
+    bl_label = "Mover con flechas"
+
+    def modal(self, context, event):
+
+        if event.type == 'LEFT_ARROW' and event.value == 'PRESS':
+            mover("Stroke", -0.2, 0)
+
+        elif event.type == 'RIGHT_ARROW' and event.value == 'PRESS':
+            mover("Stroke", 0.2, 0)
+
+        elif event.type == 'UP_ARROW' and event.value == 'PRESS':
+            mover("Stroke", 0, 0.2)
+
+        elif event.type == 'DOWN_ARROW' and event.value == 'PRESS':
+            mover("Stroke", 0, -0.2)
+
+        elif event.type == 'ESC':
+            return {'FINISHED'}
+
+        return {'RUNNING_MODAL'}
+
+    def invoke(self, context, event):
+        context.window_manager.modal_handler_add(self)
+        return {'RUNNING_MODAL'}
+
+
+bpy.utils.register_class(MoverFlechas)
+bpy.ops.view3d.mover_flechas('INVOKE_DEFAULT')
+```
+
+---
+
+## 2.3 Trazo de Líneas Curvas
+
+El trazo de líneas curvas es fundamental para representar formas suaves y naturales en gráficos por computadora. A diferencia de las líneas rectas, las curvas permiten crear figuras más complejas y realistas.
+
+### 2.3.1 Curvas Bézier
+
+Las curvas de Bézier son ampliamente utilizadas en diseño gráfico y animación. Se definen mediante puntos de control que determinan la forma de la curva. Estas curvas ofrecen gran precisión y control, lo que las hace ideales para modelar trayectorias y formas suaves.
+
+Son utilizadas en programas de diseño vectorial, tipografía y animaciones.
+
+---
+
+### 2.3.2 B-Spline
+
+Las curvas B-Spline son una extensión de las curvas de Bézier que ofrecen mayor flexibilidad. Permiten modificar partes específicas de la curva sin afectar su totalidad, lo que resulta muy útil en modelado avanzado.
+
+Se emplean en aplicaciones donde se requiere un alto nivel de control y suavidad, como el diseño industrial y la animación 3D.
+
+---
+
+### Ejercicio: Dibujo de animación
+
+Un ejercicio práctico consiste en crear una animación donde un objeto se desplace siguiendo una curva. Esto permite visualizar cómo las curvas pueden utilizarse como trayectorias y ayuda a comprender la relación entre matemáticas y movimiento en gráficos.
+
+https://github.com/user-attachments/assets/64128ef0-b52b-4f9e-ba3d-07e0654a9b09
+
+
+
+https://github.com/user-attachments/assets/67b8c6c9-f592-4149-bdf4-dfc6cf31afec
+
+
+
+---
+
+## 2.4 Fractales
+
+Los fractales son estructuras geométricas que presentan patrones repetitivos a diferentes escalas. Se generan mediante procesos iterativos o recursivos y pueden producir formas extremadamente complejas a partir de reglas simples.
+
+Son utilizados en la computación gráfica para simular elementos naturales como montañas, árboles, nubes y paisajes. Además, tienen aplicaciones en arte digital y visualización científica.
+
+---
+
+## 2.5 Uso y Creación de Fuentes de Texto
+
+Las fuentes de texto son elementos gráficos que representan caracteres y símbolos. En la graficación 2D, son esenciales para mostrar información textual dentro de una aplicación.
+
+### Uso
+
+Las fuentes permiten mejorar la comunicación visual y la estética de las interfaces. Pueden utilizarse en menús, etiquetas, títulos y contenido informativo. Existen diferentes tipos de fuentes, como las basadas en mapas de bits y las vectoriales.
+
+---
+
+### Creación
+
+La creación de fuentes implica el diseño de cada carácter utilizando herramientas especializadas. Generalmente, se construyen mediante curvas que permiten mantener la calidad visual al escalar el texto.
+
+Los formatos más comunes permiten que las fuentes sean compatibles con diferentes sistemas y aplicaciones, facilitando su uso en proyectos digitales.
+
+---
+
+## Conclusión
+
+La graficación 2D abarca un conjunto de técnicas esenciales para la manipulación y representación de objetos en un plano. Desde transformaciones básicas hasta la creación de curvas, fractales y fuentes, estos conceptos forman la base del desarrollo gráfico moderno. Su comprensión permite crear aplicaciones más dinámicas, visualmente atractivas y funcionales.
+
 ## Referencias
 
 Autor desconocido. (2026). *Evolución y fundamentos de la computación gráfica* [Infografía]. Material proporcionado en la asignatura Graficación por Computadora, Unidad 1.
@@ -209,3 +371,17 @@ Angel, E., & Shreiner, D. (2015). Interactive computer graphics: A top-down appr
 Ware, C. (2012). Information visualization: Perception for design (3rd ed.). Morgan Kaufmann.
 
 Gonzalez, R. C., & Woods, R. E. (2018). Digital image processing (4th ed.). Pearson.
+Foley, J. D., van Dam, A., Feiner, S. K., & Hughes, J. F. (1996). *Computer graphics: Principles and practice* (2nd ed.). Addison-Wesley.
+
+Hearn, D., & Baker, M. P. (2011). *Computer graphics with OpenGL* (4th ed.). Pearson.
+
+Angel, E., & Shreiner, D. (2015). *Interactive computer graphics: A top-down approach with WebGL* (7th ed.). Addison-Wesley.
+
+Rogers, D. F. (2001). *An introduction to NURBS: With historical perspective*. Morgan Kaufmann.
+
+Salomon, D. (2011). *Curves and surfaces for computer graphics*. Springer.
+
+Barnsley, M. F. (2014). *Fractals everywhere* (2nd ed.). Academic Press.
+
+Pharr, M., Jakob, W., & Humphreys, G. (2016). *Physically based rendering: From theory to implementation* (3rd ed.). Morgan Kaufmann.
+
