@@ -243,6 +243,7 @@ El uso de matrices es especialmente importante en motores gráficos y biblioteca
 ### Ejercicio: Control con teclas de dirección
 
 Un ejercicio común consiste en controlar el movimiento de un objeto en pantalla utilizando las teclas de dirección del teclado. Cada tecla corresponde a un desplazamiento en una dirección específica, lo que permite aplicar la transformación de traslación en tiempo real. Este tipo de práctica ayuda a comprender cómo interactúan las transformaciones con la entrada del usuario.
+
 https://github.com/user-attachments/assets/01f28ab2-87bb-4126-b31a-0700104cc016
 
 ```
